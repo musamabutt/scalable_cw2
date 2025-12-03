@@ -1,0 +1,75 @@
+<!-- templates/feed.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>VideoApp — Feed</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">VideoApp</div>
+  
+    <div class="user-area">
+      {% if current_user %}
+        <span class="username">Hello, {{ current_user.username }}</span>
+        <!-- Logout icon button -->
+        <a href="/logout" class="logout-btn" title="Logout">&#x23FB;</a>
+      {% else %}
+        <a href="/">Login / Sign Up</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="upload-section">
+      <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
+        <input type="text" name="title" placeholder="Video title" required>
+        <input type="file" name="file" accept="video/*" required>
+        <button type="submit" class="primary">Upload Video</button>
+      </form>
+    </section>
+
+    <section class="feed-section">
+      {% for video in videos %}
+      <article class="video-card" data-video-id="{{ video.id }}">
+        <div class="video-header">
+          <h3 class="video-title">{{ video.title }}</h3>
+          <div class="meta">Uploaded by: <strong>{{ video.username}}</strong></div>
+        </div>
+
+        <div class="video-container">
+          <video controls preload="metadata" poster="" >
+            <source src="{{ video.filename }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="actions">
+          <button class="like-btn" data-video-id="{{ video.id }}">👍 Like (<span class="like-count">{{ video.likes }}</span>)</button>
+        </div>
+
+        <div class="comments-block">
+          <h4>Comments</h4>
+          <div class="comment-list">
+            {% for comment in video.comments %}
+              <div class="comment">
+                <strong>{{ comment.username }}</strong>: <span class="comment-text">{{ comment.content }}</span>
+              </div>
+            {% endfor %}
+          </div>
+
+          <form class="comment-form" onsubmit="addComment(event, '{{ video.id }}')">
+            <input type="text" name="content" placeholder="Add a comment..." required>
+            <button type="submit" class="secondary">Comment</button>
+          </form>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
