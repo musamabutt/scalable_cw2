@@ -1,8 +1,13 @@
 # models/user.py
+import os
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config import DATABASE_URL
+
+# Read database URL from environment variable
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set")
 
 Base = declarative_base()
 engine = create_engine(DATABASE_URL)

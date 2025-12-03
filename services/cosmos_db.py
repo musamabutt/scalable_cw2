@@ -1,20 +1,31 @@
 # services/cosmos_db.py
-from azure.cosmos import CosmosClient, PartitionKey
-from config import COSMOS_ENDPOINT, COSMOS_KEY, COSMOS_DATABASE, COSMOS_USERS_CONTAINER, COSMOS_VIDEOS_CONTAINER, COSMOS_COMMENTS_CONTAINER
+import os
 import uuid
+from azure.cosmos import CosmosClient, PartitionKey
+from datetime import datetime
 
 class CosmosDB:
     def __init__(self):
-        self.client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
-        self.database = self.client.create_database_if_not_exists(COSMOS_DATABASE)
+        endpoint = os.getenv("COSMOS_ENDPOINT")
+        key = os.getenv("COSMOS_KEY")
+        database_name = os.getenv("COSMOS_DATABASE")
+        users_container = os.getenv("COSMOS_USERS_CONTAINER")
+        videos_container = os.getenv("COSMOS_VIDEOS_CONTAINER")
+        comments_container = os.getenv("COSMOS_COMMENTS_CONTAINER")
+
+        if not all([endpoint, key, database_name, users_container, videos_container, comments_container]):
+            raise ValueError("One or more CosmosDB environment variables are not set")
+
+        self.client = CosmosClient(endpoint, key)
+        self.database = self.client.create_database_if_not_exists(database_name)
         self.users = self.database.create_container_if_not_exists(
-            id=COSMOS_USERS_CONTAINER, partition_key=PartitionKey(path="/id")
+            id=users_container, partition_key=PartitionKey(path="/id")
         )
         self.videos = self.database.create_container_if_not_exists(
-            id=COSMOS_VIDEOS_CONTAINER, partition_key=PartitionKey(path="/id")
+            id=videos_container, partition_key=PartitionKey(path="/id")
         )
         self.comments = self.database.create_container_if_not_exists(
-            id=COSMOS_COMMENTS_CONTAINER, partition_key=PartitionKey(path="/id")
+            id=comments_container, partition_key=PartitionKey(path="/id")
         )
 
     # ---------- Users ----------
@@ -31,7 +42,7 @@ class CosmosDB:
             "id": user_id,
             "username": username,
             "password": password,
-            "createdAt": __import__("datetime").datetime.utcnow().isoformat()
+            "createdAt": datetime.utcnow().isoformat()
         }
         self.users.create_item(body=user)
         return user
@@ -67,14 +78,13 @@ class CosmosDB:
             "user_id": user_id,
             "username": username, 
             "likes": 0,
-            "createdAt": __import__("datetime").datetime.utcnow().isoformat()
+            "createdAt": datetime.utcnow().isoformat()
         }
         self.videos.create_item(body=video)
         return video
 
     def get_videos(self):
         items = list(self.videos.read_all_items())
-        # sort by createdAt desc if exists
         try:
             items.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
         except Exception:
@@ -82,11 +92,8 @@ class CosmosDB:
         return items
 
     def update_video_likes(self, video_id: str):
-        # read, increment, replace
         video = self.videos.read_item(item=video_id, partition_key=video_id)
-        if 'likes' not in video:
-            video['likes'] = 0
-        video['likes'] += 1
+        video['likes'] = video.get('likes', 0) + 1
         self.videos.replace_item(item=video_id, body=video)
         return video
 
@@ -99,7 +106,7 @@ class CosmosDB:
             "user_id": user_id,
             "username": username,
             "content": content,
-            "createdAt": __import__("datetime").datetime.utcnow().isoformat()
+            "createdAt": datetime.utcnow().isoformat()
         }
         self.comments.create_item(body=comment)
         return comment
