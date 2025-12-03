@@ -1,0 +1,74 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+.Python
+env/
+venv/
+ENV/
+env.bak/
+celerybeat-schedule
+
+# -------------------------
+# Flask / Django uploads (videos, images)
+# -------------------------
+uploads/
+videos/
+media/
+static/uploads/
+instance/
+
+# If using a temp chunk upload folder
+tmp/
+temp/
+
+# -------------------------
+# Environment Variables
+# -------------------------
+.env
+*.env
+.env.local
+.secrets
+secret.key
+credentials.json
+
+# -------------------------
+# IDE / Editor files
+# -------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -------------------------
+# Logs
+# -------------------------
+*.log
+logs/
+nohup.out
+
+# -------------------------
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Node (if using npm for frontend build)
+# -------------------------
+node_modules/
+dist/
+build/
+
+# -------------------------
+# GitHub Actions / Docker
+# -------------------------
+docker-data/
+.cache/
+config.py
