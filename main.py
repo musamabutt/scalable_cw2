@@ -114,3 +114,7 @@ def comment_video(video_id: str, content: str = Form(...), request: Request = No
     username = user.get("username") if user else "Unknown"
     comment = db.create_comment(video_id, user_id, username, content)
     return comment
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
