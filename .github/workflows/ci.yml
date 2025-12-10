@@ -1,0 +1,40 @@
+name: VideoApp CI & Performance Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: "0 */12 * * *"   # Runs every 12 hours
+
+jobs:
+  run-tests:
+    name: Run Unit + Performance Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    # Set the environment variable for Azure API
+    # (your app runs from env variables locally, so we keep same approach)
+    - name: Configure environment variables
+      run: echo "VIDEO_API_URL=https://videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net/videos" >> $GITHUB_ENV
+
+    - name: Run unit tests
+      run: |
+        python -m unittest discover tests
+
+    - name: Run performance test
+      run: |
+        python performance_test.py
