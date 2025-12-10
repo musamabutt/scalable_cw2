@@ -33,7 +33,7 @@ jobs:
 
     - name: Run unit tests
       run: |
-        python -m unittest discover tests
+        pytest
 
     - name: Run performance test
       run: |
