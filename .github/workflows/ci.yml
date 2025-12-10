@@ -31,14 +31,14 @@ jobs:
     - name: Configure environment variables
       run: echo "VIDEO_API_URL=https://videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net/videos" >> $GITHUB_ENV
 
-    - name: Run unit tests
-      run: |
-        pytest
-
-    - name: Run performance test
-      run: |
-        python performance_test.py
-
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+    
+    - name: Run unit tests
+      run: |
+        pytest tests/
+    
+    - name: Run performance test
+      run: |
+        python performance_test.py
