@@ -42,13 +42,13 @@ jobs:
     - name: Configure environment variables
       run: |
         echo "VIDEO_API_URL=https://videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net/videos" >> $GITHUB_ENV
-        echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV
-        echo "AZURE_CONTAINER_NAME=${{ secrets.AZURE_CONTAINER_NAME }}" >> $GITHUB_ENV
-        echo "COSMOS_ENDPOINT=${{ secrets.COSMOS_ENDPOINT }}" >> $GITHUB_ENV
-        echo "COSMOS_KEY=${{ secrets.COSMOS_KEY }}" >> $GITHUB_ENV
-        echo "COSMOS_DATABASE=${{ secrets.COSMOS_DATABASE }}" >> $GITHUB_ENV
-        echo "COSMOS_USERS_CONTAINER=${{ secrets.COSMOS_USERS_CONTAINER }}" >> $GITHUB_ENV
-        echo "COSMOS_VIDEOS_CONTAINER=${{ secrets.COSMOS_VIDEOS_CONTAINER }}" >> $GITHUB_ENV
-        echo "COSMOS_COMMENTS_CONTAINER=${{ secrets.COSMOS_COMMENTS_CONTAINER }}" >> $GITHUB_ENV
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+        echo "AZURE_STORAGE_CONNECTION_STRING=${{ vars.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV
+        echo "AZURE_CONTAINER_NAME=${{ vars.AZURE_CONTAINER_NAME }}" >> $GITHUB_ENV
+        echo "COSMOS_ENDPOINT=${{ vars.COSMOS_ENDPOINT }}" >> $GITHUB_ENV
+        echo "COSMOS_KEY=${{ vars.COSMOS_KEY }}" >> $GITHUB_ENV
+        echo "COSMOS_DATABASE=${{ vars.COSMOS_DATABASE }}" >> $GITHUB_ENV
+        echo "COSMOS_USERS_CONTAINER=${{ vars.COSMOS_USERS_CONTAINER }}" >> $GITHUB_ENV
+        echo "COSMOS_VIDEOS_CONTAINER=${{ vars.COSMOS_VIDEOS_CONTAINER }}" >> $GITHUB_ENV
+        echo "COSMOS_COMMENTS_CONTAINER=${{ vars.COSMOS_COMMENTS_CONTAINER }}" >> $GITHUB_ENV
+        echo "SECRET_KEY=${{ vars.SECRET_KEY }}" >> $GITHUB_ENV
   
