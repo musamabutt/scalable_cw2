@@ -2,7 +2,7 @@ import time
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-URL = "http://127.0.0.1:8000/videos"   # change to your local FastAPI route
+URL = "videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net"   # change to your local FastAPI route
 
 def run_request():
     start = time.time()
