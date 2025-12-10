@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from services.azure_storage import AzureStorage
 from services.cosmos_db import CosmosDB
 import uuid
+from textblob import TextBlob
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -51,7 +52,8 @@ def feed(request: Request):
     videos = db.get_videos()
     # attach comments and commenter username for each video
     for v in videos:
-        v['comments'] = db.get_comments_for_video(v['id'])
+        comments = db.get_comments_for_video(v['id'])
+        v['comments'] = [c for c in comments if TextBlob(c['content']).sentiment.polarity >= 0]
     # get current user's username (if logged in) for UI display
     user = None
     user_id = request.cookies.get("user_id")

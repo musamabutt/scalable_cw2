@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from .user import Base, SessionLocal
 from .video import Video
+from textblob import TextBlob
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -31,4 +32,6 @@ class Comment(Base):
         db = SessionLocal()
         comments = db.query(Comment).filter_by(video_id=video_id).all()
         db.close()
-        return comments
+        # Filter out negative comments
+        positive_comments = [c for c in comments if TextBlob(c.content).sentiment.polarity >= 0]
+        return positive_comments
