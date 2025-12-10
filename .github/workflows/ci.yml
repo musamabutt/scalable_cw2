@@ -24,31 +24,51 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
-        python -m pip install pytest httpx
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest httpx
 
-    - name: Configure environment variables
-      run: echo "VIDEO_API_URL=https://videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net/videos" >> $GITHUB_ENV
+    # Inject all required environment variables
+    - name: Set environment variables
+      env:
+        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
+        COSMOS_ENDPOINT: ${{ secrets.COSMOS_ENDPOINT }}
+        COSMOS_KEY: ${{ secrets.COSMOS_KEY }}
+        COSMOS_DATABASE: ${{ secrets.COSMOS_DATABASE }}
+        COSMOS_USERS_CONTAINER: ${{ secrets.COSMOS_USERS_CONTAINER }}
+        COSMOS_VIDEOS_CONTAINER: ${{ secrets.COSMOS_VIDEOS_CONTAINER }}
+        COSMOS_COMMENTS_CONTAINER: ${{ secrets.COSMOS_COMMENTS_CONTAINER }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        VIDEO_API_URL: ${{ secrets.VIDEO_API_URL }}
+      run: echo "Environment variables set"
 
     - name: Run unit tests
+      env:
+        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
+        COSMOS_ENDPOINT: ${{ secrets.COSMOS_ENDPOINT }}
+        COSMOS_KEY: ${{ secrets.COSMOS_KEY }}
+        COSMOS_DATABASE: ${{ secrets.COSMOS_DATABASE }}
+        COSMOS_USERS_CONTAINER: ${{ secrets.COSMOS_USERS_CONTAINER }}
+        COSMOS_VIDEOS_CONTAINER: ${{ secrets.COSMOS_VIDEOS_CONTAINER }}
+        COSMOS_COMMENTS_CONTAINER: ${{ secrets.COSMOS_COMMENTS_CONTAINER }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        VIDEO_API_URL: ${{ secrets.VIDEO_API_URL }}
       run: |
-        python -m pytest tests/ --maxfail=1 --disable-warnings
+        pytest tests/ --maxfail=1 --disable-warnings
 
     - name: Run performance test
+      env:
+        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
+        COSMOS_ENDPOINT: ${{ secrets.COSMOS_ENDPOINT }}
+        COSMOS_KEY: ${{ secrets.COSMOS_KEY }}
+        COSMOS_DATABASE: ${{ secrets.COSMOS_DATABASE }}
+        COSMOS_USERS_CONTAINER: ${{ secrets.COSMOS_USERS_CONTAINER }}
+        COSMOS_VIDEOS_CONTAINER: ${{ secrets.COSMOS_VIDEOS_CONTAINER }}
+        COSMOS_COMMENTS_CONTAINER: ${{ secrets.COSMOS_COMMENTS_CONTAINER }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        VIDEO_API_URL: ${{ secrets.VIDEO_API_URL }}
       run: |
         python performance_test.py
-
-    - name: Configure environment variables
-      run: |
-        echo "VIDEO_API_URL=https://videoapp-esbxhscadcg8d8bc.uksouth-01.azurewebsites.net/videos" >> $GITHUB_ENV
-        echo "AZURE_STORAGE_CONNECTION_STRING=${{ vars.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV
-        echo "AZURE_CONTAINER_NAME=${{ vars.AZURE_CONTAINER_NAME }}" >> $GITHUB_ENV
-        echo "COSMOS_ENDPOINT=${{ vars.COSMOS_ENDPOINT }}" >> $GITHUB_ENV
-        echo "COSMOS_KEY=${{ vars.COSMOS_KEY }}" >> $GITHUB_ENV
-        echo "COSMOS_DATABASE=${{ vars.COSMOS_DATABASE }}" >> $GITHUB_ENV
-        echo "COSMOS_USERS_CONTAINER=${{ vars.COSMOS_USERS_CONTAINER }}" >> $GITHUB_ENV
-        echo "COSMOS_VIDEOS_CONTAINER=${{ vars.COSMOS_VIDEOS_CONTAINER }}" >> $GITHUB_ENV
-        echo "COSMOS_COMMENTS_CONTAINER=${{ vars.COSMOS_COMMENTS_CONTAINER }}" >> $GITHUB_ENV
-        echo "SECRET_KEY=${{ vars.SECRET_KEY }}" >> $GITHUB_ENV
-  
